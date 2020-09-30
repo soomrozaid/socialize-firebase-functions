@@ -1,8 +1,9 @@
 const functions = require("firebase-functions");
-
 const app = require("express")();
-
 const { db } = require("./util/admin");
+
+const cors = require("cors");
+app.use(cors());
 
 const {
   getAllScreams,
@@ -145,7 +146,10 @@ exports.onScreamDelete = functions.firestore
         data.forEach((doc) => {
           batch.delete(db.doc(`/likes/${doc.id}`));
         });
-        return db.collection("notifications").where("screamId", "==", screamId).get();
+        return db
+          .collection("notifications")
+          .where("screamId", "==", screamId)
+          .get();
       })
       .then((data) => {
         data.forEach((doc) => {
